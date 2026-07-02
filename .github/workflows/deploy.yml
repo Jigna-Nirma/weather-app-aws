@@ -35,7 +35,7 @@ jobs:
       - name: Deploy weather-fetcher to Lambda
         run: |
           aws lambda update-function-code \
-            --function-name weather-fetcher \
+            --function-name weather-fetcher-docker \
             --image-uri ${{ steps.login-ecr.outputs.registry }}/weather-fetcher:latest
 
   deploy-reader:
@@ -67,5 +67,5 @@ jobs:
       - name: Deploy weather-reader to Lambda
         run: |
           aws lambda update-function-code \
-            --function-name weather-reader \
+            --function-name weather-reader-docker \
             --image-uri ${{ steps.login-ecr.outputs.registry }}/weather-reader:latest
