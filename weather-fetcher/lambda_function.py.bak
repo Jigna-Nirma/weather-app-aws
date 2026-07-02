@@ -6,7 +6,7 @@ import boto3
 
 def lambda_handler(event, context):
     api_key = os.environ['OPENWEATHER_API_KEY']
-    city = "Surat"
+    city = "Ahmedabad"
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
     
     with urllib.request.urlopen(url) as response:
