@@ -1,0 +1,71 @@
+name: Deploy Weather App to AWS Lambda
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-fetcher:
+    name: Build & Deploy weather-fetcher
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build & Push weather-fetcher image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_REGISTRY/weather-fetcher:latest ./weather-fetcher
+          docker push $ECR_REGISTRY/weather-fetcher:latest
+
+      - name: Deploy weather-fetcher to Lambda
+        run: |
+          aws lambda update-function-code \
+            --function-name weather-fetcher \
+            --image-uri ${{ steps.login-ecr.outputs.registry }}/weather-fetcher:latest
+
+  deploy-reader:
+    name: Build & Deploy weather-reader
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build & Push weather-reader image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_REGISTRY/weather-reader:latest ./weather-reader
+          docker push $ECR_REGISTRY/weather-reader:latest
+
+      - name: Deploy weather-reader to Lambda
+        run: |
+          aws lambda update-function-code \
+            --function-name weather-reader \
+            --image-uri ${{ steps.login-ecr.outputs.registry }}/weather-reader:latest
