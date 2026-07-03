@@ -4,7 +4,7 @@ from boto3.dynamodb.conditions import Key
 
 def lambda_handler(event, context):
     city = event.get('queryStringParameters') or {}
-    city = city.get('city', 'Ahmedabad')
+    city = city.get('city', 'Surat')
 
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('weather-history')
