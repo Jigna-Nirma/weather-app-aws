@@ -3,11 +3,14 @@ import boto3
 from boto3.dynamodb.conditions import Key
 
 def lambda_handler(event, context):
+    city = event.get('queryStringParameters') or {}
+    city = city.get('city', 'Ahmedabad')
+
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('weather-history')
 
     response = table.query(
-        KeyConditionExpression=Key('City').eq('surat'),
+        KeyConditionExpression=Key('City').eq(city),
         ScanIndexForward=False,
         Limit=10
     )

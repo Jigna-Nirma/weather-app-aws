@@ -5,8 +5,9 @@ from datetime import datetime, timezone
 import boto3
 
 def lambda_handler(event, context):
+    city = event.get('city', 'Ahmedabad')
+    
     api_key = os.environ['OPENWEATHER_API_KEY']
-    city = "Surat"
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
     
     with urllib.request.urlopen(url) as response:
@@ -24,8 +25,7 @@ def lambda_handler(event, context):
 
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('weather-history')
-    response = table.put_item(Item=record)
-    print("DynamoDB response:", response)
+    table.put_item(Item=record)
 
     print("Saved to DynamoDB:", record)
     return {
