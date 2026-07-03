@@ -7,7 +7,7 @@ def lambda_handler(event, context):
     table = dynamodb.Table('weather-history')
 
     response = table.query(
-        KeyConditionExpression=Key('City').eq('Ahmedabad'),
+        KeyConditionExpression=Key('City').eq('surat'),
         ScanIndexForward=False,
         Limit=10
     )
