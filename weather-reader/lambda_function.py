@@ -1,10 +1,10 @@
 import json
 import boto3
 from boto3.dynamodb.conditions import Key
-#demo
+
 def lambda_handler(event, context):
     city = event.get('queryStringParameters') or {}
-    city = city.get('city', 'Surat')
+    city = city.get('city', 'Banglore')
 
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('weather-history')
