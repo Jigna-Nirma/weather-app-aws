@@ -1,7 +1,7 @@
 import json
 import boto3
 from boto3.dynamodb.conditions import Key
-#Demo
+#demo
 def lambda_handler(event, context):
     city = event.get('queryStringParameters') or {}
     city = city.get('city', 'Surat')
