@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 import boto3
 
 def lambda_handler(event, context):
-    city = event.get('city', 'Delhi')
+    city = event.get('city', 'Pune')
     
     api_key = os.environ['OPENWEATHER_API_KEY']
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
