@@ -1,7 +1,7 @@
 import json
 import boto3
 from boto3.dynamodb.conditions import Key
-
+#Demo
 def lambda_handler(event, context):
     city = event.get('queryStringParameters') or {}
     city = city.get('city', 'Surat')
@@ -25,3 +25,4 @@ def lambda_handler(event, context):
         },
         "body": json.dumps(items)
     }
+
